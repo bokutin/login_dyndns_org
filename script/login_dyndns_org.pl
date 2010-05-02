@@ -17,12 +17,12 @@ try {
     $mech->agent_alias( 'Windows IE 6' );
     $mech->get( $top );
     $mech->submit_form(
-        fields => {
+        with_fields => {
             username => $CONFIG->config->{username},
             password => $CONFIG->config->{password},
         },
     );
-    die sprintf("login failed. %s", $mech->content) unless $mech->content =~ m/Logged In User/i;
+    die sprintf("login failed. %s", $mech->content) unless $mech->content =~ m/Welcome/i;
 }
 catch {
     my $msg = MIME::Lite->new(
