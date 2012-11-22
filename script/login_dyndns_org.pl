@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Config::JFDI;
 use FindBin;
+use List::Util qw(first);
 use MIME::Lite;
 use Try::Tiny;
 use WWW::Mechanize;
@@ -16,14 +17,11 @@ try {
     my $mech = WWW::Mechanize->new();
     $mech->agent_alias( 'Windows IE 6' );
     $mech->get( $top );
-    for ($mech->forms) {
-        if ($mech->attr('id') =~ m/^login\b/) {
-            $mech->form_id($mech->attr('id'));
-            last;
-        }
-    }
+
+    my $form_id = first { !m/^login/ } map { $_->attr('id') } $mech->forms or die;
     $mech->submit_form(
-        with_fields => {
+        form_id => $form_id,
+        fields => {
             username => $CONFIG->config->{username},
             password => $CONFIG->config->{password},
         },
