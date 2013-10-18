@@ -13,12 +13,12 @@ my $CONFIG = Config::JFDI->new(name => "login_dyndns_org", path => "$FindBin::Bi
 my $DEBUG  = $CONFIG->config->{debug};
 
 try {
-    my $top = "https://www.dyndns.com/account/entrance/";
+    my $top = "https://account.dyn.com/entrance/";
     my $mech = WWW::Mechanize->new();
     $mech->agent_alias( 'Windows IE 6' );
     $mech->get( $top );
 
-    my $form_id = first { !m/^login/ } map { $_->attr('id') } $mech->forms or die;
+    my $form_id = first { m/^login/ } map { $_->attr('id') } $mech->forms or die;
     $mech->submit_form(
         form_id => $form_id,
         fields => {
